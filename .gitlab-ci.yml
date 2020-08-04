@@ -20,7 +20,7 @@ cache:
 install: # job的名称
   stage: install # 定义job的阶段 必须属于stages中的一个
   tags:
-    - myubuntu1 # 使用tag为myubuntu1的runner去执行该job
+    - myubuntu # 使用tag为myubuntu1的runner去执行该job
   script:
     - npm install --registry=http://registry.npm.taobao.org
 
@@ -28,7 +28,7 @@ install: # job的名称
 code-lint:
   stage: test
   tags:
-    - myubuntu1
+    - myubuntu
   script:
     - npm run lint
   allow_failure: true # 运行失败,代码验证失败后仍然会执行后续job
@@ -37,7 +37,7 @@ code-lint:
 build-dist:
   stage: build-dist
   tags:
-    - myubuntu1
+    - myubuntu
   script:
     - npm run build
   # artifacts:
@@ -51,7 +51,7 @@ build-image:
   image: $DOCKER_IMG # 依赖的基础镜像
   stage: build-image
   tags:
-    - myubuntu1
+    - myubuntu
   script:
     - docker login -u $HARBOR_USERNAME -p $HARBOR_PWD $HARBOR_URL # 登录镜像仓库
     - docker build -t $APP_IMAGE_NAME . # 构建镜像
@@ -64,7 +64,7 @@ deploy:
   image: $DOCKER_IMG
   stage: deploy
   tags:
-    - myubuntu1
+    - myubuntu
   script:
     # 如果有容器名为$APP_CONTAINER_NAME的容器在运行则强行上删除
     - if [ $(docker ps -aq --filter name=$APP_CONTAINER_NAME) ]; then docker rm -f $APP_CONTAINER_NAME;fi
