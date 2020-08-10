@@ -11,7 +11,7 @@ on:
 # 一个工作流的根节点jobs,以下可以定义多个job
 jobs:
   # 定义一个名为 build 的job
-  release:
+  build:
     # CI 或 job执行的环境
     runs-on: ubuntu-latest
 
