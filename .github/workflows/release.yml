@@ -57,10 +57,10 @@ jobs:
     # 上传dist目录作为制品
     - name: Create A build Release and Artifact
       uses: ncipollo/release-action@v1
-        with:
-          artifacts: "dist"
-          bodyFile: "dist"
-          token: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        artifacts: "dist"
+        bodyFile: "dist"
+        token: ${{ secrets.GITHUB_TOKEN }}
     #  uses: actions/upload-artifact@v2.1.3
     #  with:
     #    # 制品名称
