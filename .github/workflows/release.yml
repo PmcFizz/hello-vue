@@ -1,5 +1,5 @@
 # 工作流名称
-name: CI
+name: Release
 
 # 限定工作流执行的条件
 # 触发条件 branches限定分支
