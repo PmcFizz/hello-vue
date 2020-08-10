@@ -1,0 +1,86 @@
+# 工作流名称
+name: CI
+
+# 限定工作流执行的条件
+# 触发条件 branches限定分支
+# push推送到master动作,pull_request是合并到master动作
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# 一个工作流的根节点jobs,以下可以定义多个job
+jobs:
+  # 定义一个名为 build 的job
+  build:
+    # CI 或 job执行的环境
+    runs-on: ubuntu-latest
+
+    # job中每一步的任务序列
+    steps:
+
+      # Job Start
+    - name: Job Start
+      run: echo Hello, GitHub workflows !
+
+    # 检出你在当前github工作空间的项目
+    - uses: actions/checkout@v2
+
+    # 执行一个一系列或多行的shell命令
+    # - name: Run a multi-line script
+    #   run: |
+    #     echo Add other actions to build,
+    #     echo test, and deploy your project.
+
+    # 设置Node环境 actions/setup-node@v1 是GitHub Marketplace其中的一个,相当于一个方法
+    # 使用一个Actions 使用uses关键字,  with表明参数
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+
+    # 使用多路径的缓存帮助构建
+    - name: Cache multiple paths
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/cache
+          !~/cache/exclude
+          **/node_modules
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+
+    # 安装项目依赖
+    - name: Install Dependencies
+      run: npm install
+
+    # 执行代码检查
+    - name: Lint Code
+      run: npm run lint
+
+    # 编译项目到静态文件
+    - name: Build Static
+      run: npm run build
+
+    - name: Run a one-line script
+      run: pwd && ll
+
+    # - name: Create Release
+    #   id: create_release
+    #   uses: actions/create-release@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     tag_name: v0.0.1112f1
+    #     release_name: Release v0.0.1112f1
+    #     draft: false
+    #     prerelease: false
+    # - name: Upload Release Asset
+    #   id: upload-release-asset
+    #   uses: actions/upload-release-asset@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+    #     asset_path: dist/static/master-dev.tar.gz
+    #     asset_name: master-dev.tar.gz
